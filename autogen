@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Copyright 2024 Aura Kelloniemi
+#
+# This script generates the cabal build files for this project from templates
+# using bash and Precabal.
+#
+# This file has the same terms for use and distribution as other files
+# in this software. See file LICENSE for details.
+
+set -euE -o pipefail
+shopt -s failglob globstar
+
+if [ "$#" -ne 0 ]; then
+    echo "This script generates this project's cabal files from templates." >&2
+    echo "Read the script for more details." >&2
+    exit 1
+fi
+
+root_dir="$(realpath "$(dirname "${0}")")"
+bounds_file="cabal/package.bounds"
+
+cd "${root_dir}"
+if [ ! -f "${bounds_file}" ]; then
+    echo "Package bounds definition file \`${bounds_file}\` does not exist" >&2
+    exit 1
+fi
+
+for file in **/*.cabal.in
+do
+    # Skip package files in dist-newstyle
+    [[ "$file" == dist-newstyle/* ]] && continue
+
+    if [ ! -f "${file}" ]; then
+        echo "${file} is not a regular file, skipping." >&2
+        continue
+    fi
+    dest="${file%.in}"
+    echo "Generating ${dest}..." >&2
+    precabal -b cabal/package.bounds -I. -o "${dest}" -- "${file}"
+done
+echo All done!

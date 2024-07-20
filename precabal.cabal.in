@@ -1,0 +1,49 @@
+$-- This is a Cabal file template that is used to generate the final cabal file
+$-- for this project using the Precabal tool. Use the `autogen` script from
+$-- the project's root directory to do the generation.
+$--
+$-- This file has the same terms for use and distribution as other files
+$-- in this software. See file LICENSE for details.
+$--
+$-- The following line needs to be the first non-Precabal-style comment line
+$-- in this file due to Cabal restrictions.
+$(include-file cabal/prologue.inc)$
+
+name: precabal
+version: 0.1.0.0
+synopsis: A simple macro preprocessor for assisting in .cabal file management
+description:
+    Precabal provides include directives and package version bound expansions
+    to facilitate managing .cabal files in multi-package projects.
+    .
+    It is also useful for sharing common cabal definitions across projects.
+homepage: https://github.com/Merivuokko/precabal
+license: GPL-3.0-only
+license-file: LICENSE
+author: Aura Kelloniemi
+maintainer: kaura.dev@sange.fi
+copyright: Copyright 2024 Aura Kelloniemi
+tested-with: GHC == { 9.10.1 }
+
+source-repository head
+    type: git
+    location: https://github.com/Merivuokko/precabal
+                      
+$(include-file cabal/common.inc)$
+
+executable precabal
+    import: options
+    build-depends:
+        ${base},
+        ${containers},
+        ${file-io},
+        ${filepath},
+        ${megaparsec},
+        ${mtl},
+        ${optparse-applicative},
+        ${text},
+        ${unordered-containers},
+
+    hs-source-dirs: src
+    main-is: Main.hs
+    other-modules:
